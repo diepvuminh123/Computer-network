@@ -1,49 +1,34 @@
-# node.py
 import socket
-import threading
-import requests
 import json
-import os
-
+# Cấu hình địa chỉ Tracker và Node
 TRACKER_HOST = 'localhost'
-TRACKER_PORT = 8080
-PEER_ID = f"peer_{socket.gethostname()}"
+TRACKER_PORT = 5000
+NODE_HOST = 'localhost'
+NODE_PORT = 6000  # Cổng riêng của node này
 
-def announce_to_tracker(file_hash, port):
-    # Announce to tracker with the file hash and port
-    url = f"http://{TRACKER_HOST}:{TRACKER_PORT}/announce"
-    params = {
-        'peer_id': PEER_ID,
-        'file_hash': file_hash,
-        'port': port
-    }
-    response = requests.get(url, params=params)
-    peers = response.json().get('peers', [])
-    print(f"Peers for file {file_hash}: {peers}")
-    return peers
-
-def download_from_peer(ip, port, file_hash):
-    # Connect to peer and download pieces of file
+def register_with_tracker(file_name, piece_index):
     try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((ip, port))
-            s.sendall(file_hash.encode('utf-8'))
-            data = s.recv(1024)
-            with open(file_hash, 'wb') as f:
-                f.write(data)
-            print(f"Downloaded file from {ip}:{port}")
-    except Exception as e:
-        print(f"Failed to download from {ip}:{port} - {e}")
+        # Kết nối đến Tracker
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((TRACKER_HOST, TRACKER_PORT))
+            
+            # Tạo yêu cầu đăng ký và gửi đến Tracker
+            request = {
+                "action": "register",
+                "file_name": file_name,
+                "piece_index": piece_index,
+                "peer_port": NODE_PORT
+            }
+            sock.sendall(json.dumps(request).encode('utf-8'))
 
-def start_node(file_hash):
-    # Start node as both client and server
-    port = 9000
-    peers = announce_to_tracker(file_hash, port)
-    
-    # Download from peers
-    for peer in peers:
-        threading.Thread(target=download_from_peer, args=(peer['ip'], peer['port'], file_hash)).start()
+            # Nhận phản hồi từ Tracker
+            response = sock.recv(1024).decode('utf-8')
+            response = json.loads(response)
+            print("Tracker response:", response)
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
-    file_hash = "sample_file_hash"  # Replace with actual file hash
-    start_node(file_hash)
+    file_name = "example_file.txt"
+    piece_index = 1  # Giả sử node này có phần thứ nhất của tệp
+    register_with_tracker(file_name, piece_index)
