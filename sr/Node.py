@@ -32,3 +32,4 @@ if __name__ == "__main__":
     file_name = "example_file.txt"
     piece_index = 1  # Giả sử node này có phần thứ nhất của tệp
     register_with_tracker(file_name, piece_index)
+    #Test
