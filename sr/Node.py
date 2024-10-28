@@ -1,18 +1,34 @@
 import socket
 import json
-# Cấu hình địa chỉ Tracker và Node
+import threading
+import os
+
 TRACKER_HOST = 'localhost'
 TRACKER_PORT = 5000
-NODE_HOST = 'localhost'
-NODE_PORT = 6000  # Cổng riêng của node này
+NODE_PORT = 6001  # Thay đổi cổng này cho mỗi node
+SHARED_FILES_DIR = "shared_files"
+DOWNLOADED_FILES_DIR = "downloaded_files"
 
-def register_with_tracker(file_name, piece_index):
+os.makedirs(SHARED_FILES_DIR, exist_ok=True)
+os.makedirs(DOWNLOADED_FILES_DIR, exist_ok=True)
+
+def split_file(file_path, chunk_size=1024):
+    file_name = os.path.basename(file_path)
+    file_parts = []
+    with open(file_path, 'rb') as f:
+        part_num = 0
+        while chunk := f.read(chunk_size):
+            part_file = os.path.join(SHARED_FILES_DIR, f"{file_name}_part_{part_num}")
+            with open(part_file, 'wb') as part:
+                part.write(chunk)
+            file_parts.append((file_name, part_num))
+            part_num += 1
+    return file_parts
+
+def register_piece_with_tracker(file_name, piece_index):
     try:
-        # Kết nối đến Tracker
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.connect((TRACKER_HOST, TRACKER_PORT))
-            
-            # Tạo yêu cầu đăng ký và gửi đến Tracker
             request = {
                 "action": "register",
                 "file_name": file_name,
@@ -20,16 +36,103 @@ def register_with_tracker(file_name, piece_index):
                 "peer_port": NODE_PORT
             }
             sock.sendall(json.dumps(request).encode('utf-8'))
-
-            # Nhận phản hồi từ Tracker
-            response = sock.recv(1024).decode('utf-8')
-            response = json.loads(response)
+            response = json.loads(sock.recv(1024).decode('utf-8'))
             print("Tracker response:", response)
     except Exception as e:
         print(f"Error: {e}")
 
+def get_peers_for_piece(file_name, piece_index):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((TRACKER_HOST, TRACKER_PORT))
+            request = {
+                "action": "get_peers",
+                "file_name": file_name,
+                "piece_index": piece_index
+            }
+            sock.sendall(json.dumps(request).encode('utf-8'))
+            response = json.loads(sock.recv(1024).decode('utf-8'))
+            return response.get("peers", [])
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
+
+def download_piece_from_peer(peer_ip, peer_port, file_name, piece_index):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((peer_ip, peer_port))
+            request = {
+                "action": "download",
+                "file_name": file_name,
+                "piece_index": piece_index
+            }
+            sock.sendall(json.dumps(request).encode('utf-8'))
+            
+            piece_data = sock.recv(1024)
+            part_path = os.path.join(DOWNLOADED_FILES_DIR, f"{file_name}_part_{piece_index}")
+            with open(part_path, "wb") as f:
+                f.write(piece_data)
+            print(f"Downloaded part {piece_index} of '{file_name}' from {peer_ip}:{peer_port}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+def assemble_file(file_name, total_parts):
+    output_path = os.path.join(DOWNLOADED_FILES_DIR, file_name)
+    with open(output_path, 'wb') as output_file:
+        for part_num in range(total_parts):
+            part_path = os.path.join(DOWNLOADED_FILES_DIR, f"{file_name}_part_{part_num}")
+            if not os.path.exists(part_path):
+                print(f"Missing part {part_num}, file cannot be assembled completely.")
+                return False
+            with open(part_path, 'rb') as part_file:
+                output_file.write(part_file.read())
+    print(f"File '{file_name}' has been successfully assembled at '{output_path}'.")
+    return True
+
+def start_peer_server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', NODE_PORT))
+    server_socket.listen(5)
+    print(f"Peer server running on port {NODE_PORT}")
+
+    while True:
+        conn, addr = server_socket.accept()
+        threading.Thread(target=handle_peer_request, args=(conn, addr)).start()
+
+def handle_peer_request(conn, addr):
+    try:
+        request = json.loads(conn.recv(1024).decode('utf-8'))
+        action = request.get("action")
+        
+        if action == "download":
+            file_name = request.get("file_name")
+            piece_index = request.get("piece_index")
+            file_path = os.path.join(SHARED_FILES_DIR, f"{file_name}_part_{piece_index}")
+
+            if os.path.exists(file_path):
+                with open(file_path, "rb") as f:
+                    conn.sendall(f.read())
+            else:
+                conn.sendall(b"")
+    except Exception as e:
+        print(f"Error handling peer request from {addr}: {e}")
+    finally:
+        conn.close()
+
 if __name__ == "__main__":
-    file_name = "example_file.txt"
-    piece_index = 1  # Giả sử node này có phần thứ nhất của tệp
-    register_with_tracker(file_name, piece_index)
-    #Test
+    file_path = 'C:\\Users\\ADMIN\\OneDrive\\Pictures\\tailieu1.pdf'  # Đường dẫn tệp PDF cần chia sẻ
+    parts = split_file(file_path)  # Chia nhỏ tệp thành các phần
+
+    for file_name, part_num in parts:
+        register_piece_with_tracker(file_name, part_num)
+
+    threading.Thread(target=start_peer_server).start()
+    
+    for file_name, part_num in parts:
+        peers = get_peers_for_piece(file_name, part_num)
+        for peer in peers:
+            peer_ip, peer_port = peer
+            download_piece_from_peer(peer_ip, peer_port, file_name, part_num)
+    
+    # Sau khi tải xuống, thử ghép các phần lại với nhau
+    assemble_file(file_path, len(parts))
