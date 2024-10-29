@@ -131,8 +131,8 @@ def handle_peer_request(conn, addr):
         conn.close()
 
 if __name__ == "__main__":
-    original_file_path = "E:\\pdf\\BBB.pdf"  # Đường dẫn tệp PDF gốc
-    copied_file_path = "E:\\pdf\\BBB_copy.pdf"  # Đường dẫn tệp PDF sao chép
+    original_file_path = "C:\\Users\\Admin\\Downloads\\config_sequence.png"  # Đường dẫn tệp PDF gốc
+    copied_file_path = "C:\\Users\\Admin\\Downloads\\config_sequence_copy.png" # Đường dẫn tệp PDF sao chép
     
     # Tạo bản sao của tệp PDF gốc
     create_file_copy(original_file_path, copied_file_path)
