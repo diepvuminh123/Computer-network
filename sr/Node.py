@@ -2,6 +2,7 @@ import socket
 import json
 import threading
 import os
+import shutil
 
 TRACKER_HOST = 'localhost'
 TRACKER_PORT = 5000
@@ -99,6 +100,16 @@ def start_peer_server():
         conn, addr = server_socket.accept()
         threading.Thread(target=handle_peer_request, args=(conn, addr)).start()
 
+def create_file_copy(original_path, copy_path):
+    shutil.copyfile(original_path, copy_path)
+
+def delete_file(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"File {file_path} has been deleted.")
+    else:
+        print(f"File {file_path} does not exist.")
+
 def handle_peer_request(conn, addr):
     try:
         request = json.loads(conn.recv(1024).decode('utf-8'))
@@ -120,9 +131,15 @@ def handle_peer_request(conn, addr):
         conn.close()
 
 if __name__ == "__main__":
-    file_path = "E:\\pdf\\Testing.pdf"  # Đường dẫn tệp PDF cần chia sẻ
-    parts = split_file(file_path)   # Chia nhỏ tệp thành các phần
-
+    original_file_path = "E:\\pdf\\BBB.pdf"  # Đường dẫn tệp PDF gốc
+    copied_file_path = "E:\\pdf\\BBB_copy.pdf"  # Đường dẫn tệp PDF sao chép
+    
+    # Tạo bản sao của tệp PDF gốc
+    create_file_copy(original_file_path, copied_file_path)
+    
+    # Chia nhỏ tệp sao chép thành các phần
+    parts = split_file(copied_file_path)
+    
     for file_name, part_num in parts:
         register_piece_with_tracker(file_name, part_num)
 
@@ -135,4 +152,7 @@ if __name__ == "__main__":
             download_piece_from_peer(peer_ip, peer_port, file_name, part_num)
     
     # Sau khi tải xuống, thử ghép các phần lại với nhau
-    assemble_file(file_path, len(parts))
+    assemble_file(copied_file_path, len(parts))
+
+    # Delete the copied file after reassembling
+    delete_file(copied_file_path)
