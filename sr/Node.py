@@ -120,8 +120,8 @@ def handle_peer_request(conn, addr):
         conn.close()
 
 if __name__ == "__main__":
-    file_path = 'C:\\Users\\ADMIN\\OneDrive\\Pictures\\tailieu1.pdf'  # Đường dẫn tệp PDF cần chia sẻ
-    parts = split_file(file_path)  # Chia nhỏ tệp thành các phần
+    file_path = "E:\\pdf\\Testing.pdf"  # Đường dẫn tệp PDF cần chia sẻ
+    parts = split_file(file_path)   # Chia nhỏ tệp thành các phần
 
     for file_name, part_num in parts:
         register_piece_with_tracker(file_name, part_num)
