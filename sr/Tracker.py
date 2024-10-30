@@ -55,8 +55,8 @@ def handle_peer_connection(connection, address):
         connection.close()
 
 # Hàm để khởi chạy tracker
-def start_tracker():
-    tracker_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def start_tracker(): #create Tracker
+    tracker_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #IPV4, TCP
     tracker_socket.bind((TRACKER_HOST, TRACKER_PORT))
     tracker_socket.listen(5)
     print(f"Tracker is running on {TRACKER_HOST}:{TRACKER_PORT}")
