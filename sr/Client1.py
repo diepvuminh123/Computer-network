@@ -1,21 +1,35 @@
 import socket
 
-# Khởi tạo kết nối tới tracker
+# Tracker connection info
 tracker_host = 'localhost'
 tracker_port = 4000
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect((tracker_host, tracker_port))
 
-# Đăng ký với tracker
-client.send(b"REGISTER")
-response = client.recv(1024).decode()
-print("Tracker Response:", response)
+# Client-specific information
+info_hash = 'file123hash'  # Unique identifier for the file the client wants to share or download
+peer_id = 'peer1'           # Unique identifier for this peer
+client_port = 5001          # Port this client listens on for peer-to-peer connections
 
-# Yêu cầu danh sách các peer
-client.send(b"REQUEST")
-peer_list = client.recv(1024).decode()
-print("Peer List:")
-print(peer_list)
+def connect_to_tracker():
+    try:
+        # Create a socket to connect to the tracker
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        # Connect to the tracker
+        client_socket.connect((tracker_host, tracker_port))
+        print("Connected to tracker")
 
-# Đóng kết nối sau khi hoàn thành
-client.close()
+        # Send info_hash, peer_id, and client_port as a comma-separated string
+        message = f"{info_hash},{peer_id},{client_port}"
+        client_socket.sendall(message.encode())
+
+        # Receive confirmation from the tracker
+        response = client_socket.recv(1024).decode()
+        print("Tracker response:", response)
+        
+    except Exception as e:
+        print("Error connecting to tracker:", e)
+    finally:
+        client_socket.close()
+
+# Run the client
+connect_to_tracker()
