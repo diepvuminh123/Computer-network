@@ -81,14 +81,18 @@ def PrintAllLocal():
 
 
 def select_file():
-    filedir=filedialog.askopenfilename(initialdir=os.getcwd(),title='Select Image File',filetype=(('file_type','*.txt'),('all files','*.*')))
-    if (filedir!=None):
+    # Change filetype to allow all files
+    filedir = filedialog.askopenfilename(
+        initialdir=os.getcwd(),
+        title='Select File',
+        filetype=(('All Files', '*.*'),)
+    )
+    if filedir:
         name = os.path.basename(filedir)
-        if (name!=""):
+        if name:
             print('Published', name)
-        
-        published_files.append((filedir,name))
-        client.send(f"PUBLISH@{name}".encode(FORMAT))
+            published_files.append((filedir, name))
+            client.send(f"PUBLISH@{name}".encode(FORMAT))
     
 def Publish():
     select_file()
