@@ -25,7 +25,7 @@ root.iconphoto(False,image_icon)
 
 
 
-Label(root, text="Server",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe").place(x=20,y=30)
+Label(root, text="Server",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=30)
 Frame(root, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
 box=scrolledtext.ScrolledText(root,width=49,height=16)
 box.place(x=20, y=200)
@@ -123,7 +123,7 @@ def ClientList():
     window.geometry(WINDOWSIZESTRING)
     window.configure(bg="#f4fdfe")
     window.resizable(False,False)
-    Label(window, text="The connected clients\' list",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe").place(x=20,y=30)
+    Label(window, text="The connected clients\' list",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=30)
     Frame(window, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
     show_clientList = Listbox(window,width=100,height=50)
     show_clientList.place(x = 0, y = 210)
@@ -209,8 +209,40 @@ root.protocol("WM_DELETE_WINDOW", Stop)
 def startClientList():
     _thread.start_new_thread(ClientList, ())
 
-start=Button(root,text="Start Server",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=ServerThread)
+# start=Button(root,text="Start Server",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=ServerThread)
+# start.place(x=50,y=100)
+# clist=Button(root,text="Client List",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=startClientList)
+# clist.place(x=250,y=100)
+def on_enter(e):
+    con['background'] = '#0078D7'  # Màu nền khi hover
+    con['foreground'] = 'white'    # Màu chữ khi hover
+
+def on_leave(e):
+    con['background'] = '#f4fdfe'  # Màu nền mặc định
+    con['foreground'] = '#003366'  # Màu chữ mặc định
+
+start = Button(
+    root,
+    text="START SERVER",
+    font=('Acumin Variable Concept', 17, 'bold'),
+    bg="#f4fdfe",        # Màu nền ban đầu
+    fg="#003366",        # Màu chữ ban đầu
+    activebackground="#005BB5",  # Màu khi nhấn vào nút
+    activeforeground="white",    # Màu chữ khi nhấn vào nút
+    command=ServerThread
+)
 start.place(x=50,y=100)
+
 clist=Button(root,text="Client List",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=startClientList)
+clist = Button(
+    root,
+    text="CLIENT LIST",
+    font=('Acumin Variable Concept', 17, 'bold'),
+    bg="#f4fdfe",        # Màu nền ban đầu
+    fg="#003366",        # Màu chữ ban đầu
+    activebackground="#005BB5",  # Màu khi nhấn vào nút
+    activeforeground="white",    # Màu chữ khi nhấn vào nút
+    command=startClientList
+)
 clist.place(x=250,y=100)
 root.mainloop()

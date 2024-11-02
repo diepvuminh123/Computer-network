@@ -146,8 +146,7 @@ def Connect():
 
 
 
-Label(root, text="Client",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe").place(x=20,y=20)
-
+Label(root, text="CLIENT",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=20)
 
 
 Label(root, text="Enter server's IP address", font= ('Acumin Variable Concept',13),bg="#f4fdfe").place(x=20,y=70)
@@ -157,12 +156,62 @@ Frame(root, width=400,height=2,bg="#f3f5f6").place(x=25,y=60)
 Label(root, text="Enter file name", font= ('Acumin Variable Concept',13),bg="#f4fdfe").place(x=20,y=220)
 
 
-con=Button(root,text="CONNECT",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Connect)
+# con=Button(root,text="CONNECT",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Connect)
+# con.place(x=260,y=100)
+# send=Button(root,text="PUBLISH",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Publish)
+# send.place(x=160,y=160)
+# receive=Button(root,text="DOWNLOAD",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Download)
+# receive.place(x=260,y=250)
+def on_enter(e):
+    con['background'] = '#0078D7'  # Màu nền khi hover
+    con['foreground'] = 'white'    # Màu chữ khi hover
+
+def on_leave(e):
+    con['background'] = '#f4fdfe'  # Màu nền mặc định
+    con['foreground'] = '#003366'  # Màu chữ mặc định
+
+con = Button(
+    root,
+    text="CONNECT",
+    font=('Acumin Variable Concept', 15, 'bold'),
+    bg="#f4fdfe",        # Màu nền ban đầu
+    fg="#003366",        # Màu chữ ban đầu
+    activebackground="#005BB5",  # Màu khi nhấn vào nút
+    activeforeground="white",    # Màu chữ khi nhấn vào nút
+    command=Connect
+)
 con.place(x=260,y=100)
-send=Button(root,text="PUBLISH",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Publish)
+
+send = Button(
+    root,
+    text="PUBLISH",
+    font=('Acumin Variable Concept', 15, 'bold'),
+    bg="#f4fdfe",        # Màu nền ban đầu
+    fg="#003366",        # Màu chữ ban đầu
+    activebackground="#005BB5",  # Màu khi nhấn vào nút
+    activeforeground="white",    # Màu chữ khi nhấn vào nút
+    command=Publish
+)
 send.place(x=160,y=160)
-receive=Button(root,text="DOWNLOAD",font=('Acumin Variable Concept',15,'bold'),bg="#f4fdfe",command=Download)
+
+receive = Button(
+    root,
+    text="DOWNLOAD",
+    font=('Acumin Variable Concept', 15, 'bold'),
+    bg="#f4fdfe",        # Màu nền ban đầu
+    fg="#003366",        # Màu chữ ban đầu
+    activebackground="#005BB5",  # Màu khi nhấn vào nút
+    activeforeground="white",    # Màu chữ khi nhấn vào nút
+    command=Download
+)
 receive.place(x=260,y=250)
+
+# Thêm viền và độ dày cho nút
+con.config(highlightbackground="#003366", highlightthickness=2, bd=2)
+
+# Thêm hiệu ứng hover
+con.bind("<Enter>", on_enter)
+con.bind("<Leave>", on_leave)
 
 
 
