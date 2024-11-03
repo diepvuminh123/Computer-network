@@ -8,7 +8,7 @@ import _thread
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x350+500+200"
+WINDOWSIZESTRING = "450x450+500+200"
 
 # Tạo file lưu tài khoản nếu chưa có
 if not os.path.exists("accounts.txt"):
@@ -25,22 +25,22 @@ def register():
         username_info = username_entry.get()
         password_info = password_entry.get()
 
-        if not username_info or not password_info:
-            messagebox.showerror("Lỗi", "Tên đăng nhập và mật khẩu không được để trống")
+        if username_info == "" or password_info == "":
+            messagebox.showerror("Error", "The username or password field is empty.")
             return
 
         with open("accounts.txt", "r") as file:
-            accounts = file.readlines()
-            for account in accounts:
+            list = file.readlines()
+            for account in list:
                 stored_username, _ = account.strip().split(":")
                 if stored_username == username_info:
-                    messagebox.showerror("Lỗi", "Tên đăng nhập đã tồn tại")
+                    messagebox.showerror("Error", "Username already exists.")
                     return
 
         with open("accounts.txt", "a") as file:
             file.write(f"{username_info}:{password_info}\n")
         
-        messagebox.showinfo("Thành công", "Đăng ký thành công! Vui lòng đăng nhập.")
+        messagebox.showinfo("Succeeded", "Registered successfully! You can now login.")
         register_window.destroy()
 
     # Cửa sổ đăng ký
@@ -50,16 +50,16 @@ def register():
     register_window.configure(bg="#f4fdfe")
     register_window.resizable(False, False)
 
-    Label(register_window, text="Đăng ký", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
-    Label(register_window, text="Tên đăng nhập", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+    Label(register_window, text="Sign up", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
+    Label(register_window, text="Username", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
     username_entry = Entry(register_window, width=20, bg="white", font=("arial", 15))
     username_entry.pack()
 
-    Label(register_window, text="Mật khẩu", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+    Label(register_window, text="Password", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
     password_entry = Entry(register_window, width=20, bg="white", font=("arial", 15), show="*")
     password_entry.pack()
 
-    Button(register_window, text="Đăng ký", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366",
+    Button(register_window, text="Register", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366",
            command=register_user).pack(pady=20)
 
 def login():
@@ -68,15 +68,14 @@ def login():
     password_info = password_entry.get()
 
     with open("accounts.txt", "r") as file:
-        accounts = file.readlines()
-        for account in accounts:
+        list = file.readlines()
+        for account in list:
             stored_username, stored_password = account.strip().split(":")
             if stored_username == username_info and stored_password == password_info:
-                messagebox.showinfo("Thành công", "Đăng nhập thành công!")
                 open_main_window()  # Mở cửa sổ chính
                 return
 
-    messagebox.showerror("Lỗi", "Tên đăng nhập hoặc mật khẩu không chính xác")
+    messagebox.showerror("Error", "Username or password is incorrect.")
 
 # Giao diện chính sau khi đăng nhập
 def main_window():
@@ -97,9 +96,10 @@ def main_window():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     published_files = []
 
-    # Thêm Listbox để hiển thị danh sách file đã xuất bản
+    # Thêm Listbox để hiển thị danh sách file đã upload
+    Label(root, text="Uploaded files list", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=300)
     published_listbox = Listbox(root, width=40, height=10, font=('arial', 12))
-    published_listbox.place(x=20, y=280)
+    published_listbox.place(x=20, y=330)
 
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -140,7 +140,7 @@ def main_window():
             if name:
                 published_files.append((filedir, name))
                 client.send(f"PUBLISH@{name}".encode(FORMAT))
-                messagebox.showinfo("Publish", f"File '{name}' đã được xuất bản.")
+                messagebox.showinfo("Publish", f"'{name}' has been uploaded.")
                 published_listbox.insert(END, name)  # Hiển thị tên file trong danh sách
 
     def Publish():
@@ -176,10 +176,10 @@ def main_window():
         _thread.start_new_thread(handle_server, ())
 
     Label(root, text="CLIENT", font=('Acumin Variable Concept', 20, 'bold'), bg="#f4fdfe", fg="#003366").place(x=20, y=20)
-    Label(root, text="Enter server's IP address", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=70)
+    Label(root, text="Server's IP address", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=70)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=20, y=100)
-    Label(root, text="Enter file name", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=220)
+    Label(root, text="File name", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=220)
 
     con = Button(root, text="CONNECT", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
                  activebackground="#005BB5", activeforeground="white", command=Connect)
@@ -215,20 +215,20 @@ def main_window():
 # Cửa sổ đăng nhập
 main_root = Tk()
 main_root.title("Login")
-main_root.geometry("300x250")
+main_root.geometry("300x280")
 main_root.configure(bg="#f4fdfe")
 main_root.resizable(False, False)
 
-Label(main_root, text="Đăng nhập", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
-Label(main_root, text="Tên đăng nhập", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+Label(main_root, text="Login", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
+Label(main_root, text="Username", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
 username_entry = Entry(main_root, width=20, bg="white", font=("arial", 15))
 username_entry.pack()
 
-Label(main_root, text="Mật khẩu", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+Label(main_root, text="Password", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
 password_entry = Entry(main_root, width=20, bg="white", font=("arial", 15), show="*")
 password_entry.pack()
 
-Button(main_root, text="Đăng nhập", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=login).pack(pady=10)
-Button(main_root, text="Đăng ký", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=register).pack(pady=10)
+Button(main_root, text="Log in", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=login).pack(pady=10)
+Button(main_root, text="Sign up", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=register).pack(pady=10)
 
 main_root.mainloop()
