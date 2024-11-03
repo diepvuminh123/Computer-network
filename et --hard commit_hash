@@ -1,0 +1,187 @@
+[33mcommit 3560b582b348843df1c2c8144969cea3d5eeb82c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: a09a3b7 4d76d2d
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Nov 3 16:43:34 2024 +0700
+
+    add stop server
+
+[33mcommit a09a3b7100a1568d9d27279b6de0dad564faba8a[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Nov 3 16:40:08 2024 +0700
+
+    add stop server
+
+[33mcommit 4d76d2dd5fbd6a85442aafb29d5b408b5f95687a[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Sun Nov 3 16:23:50 2024 +0700
+
+    new
+
+[33mcommit 1f2239a696e29ee8cd5f25d62f48e19242e54592[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Nov 3 01:12:39 2024 +0700
+
+    Add sign up/register
+
+[33mcommit 9952f40c5ee23ff720c9d1122b0b4f779a605074[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Nov 3 00:45:07 2024 +0700
+
+    Fix the bugs that only allowed sharing the file txt
+
+[33mcommit 925de2539500e190f0144cb9e78003792b1ca88b[m
+Author: Tanlocdev04 <loc.nguyendev04@hcmut.edu.vn>
+Date:   Sat Nov 2 17:41:54 2024 +0700
+
+    change logo, design button
+
+[33mcommit 33c69f3d9e7604e45629945631b078bd63ba6809[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sat Nov 2 15:47:35 2024 +0700
+
+    update file
+
+[33mcommit 8c5fc3b33cb336c813e6fa3f5feb2a5b60118ba0[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Fri Nov 1 23:15:54 2024 +0700
+
+    Done
+
+[33mcommit 1597c0784da3f65ba07b132e934d2a882be9b693[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Fri Nov 1 18:19:05 2024 +0700
+
+    new
+
+[33mcommit f262a33b55def9aee9af7b59c823d26e5bb5ffac[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Fri Nov 1 14:24:43 2024 +0700
+
+    new
+
+[33mcommit 98669b5d0b0b3e6b9bf1377569edc02441774fff[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Fri Nov 1 01:08:14 2024 +0700
+
+    Client3 now can request from Tracker
+
+[33mcommit e7c8db2b85c989ef3098dc3d3371b34b9e9ac528[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Thu Oct 31 21:20:56 2024 +0700
+
+    Test
+
+[33mcommit d927e74b03ebb396b26a56165c98f5fb80431be4[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Thu Oct 31 18:19:38 2024 +0700
+
+    add file hash and test it
+
+[33mcommit 00fe09d8c8f42b5023c5da31e123d2d6e94d6f22[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Thu Oct 31 12:29:59 2024 +0700
+
+    Add App
+
+[33mcommit 33653068e339d7d7921d2b2a1a2bd9cfa0685dba[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Wed Oct 30 19:07:41 2024 +0700
+
+     Add client 1 2 3
+
+[33mcommit 85b3be1b6da8dbe625e9f877b2a4a0e7d0e9a519[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Wed Oct 30 17:16:09 2024 +0700
+
+    Add Minhserver to test the connection
+
+[33mcommit dd0edd96461797ce8c8d30e234ab8f155966c273[m
+Author: Tanlocdev04 <loc.nguyendev04@hcmut.edu.vn>
+Date:   Wed Oct 30 00:48:26 2024 +0700
+
+    test
+
+[33mcommit 457e2a5931884f143abc49f82af2df72afbdc121[m
+Author: Tanlocdev04 <loc.nguyendev04@hcmut.edu.vn>
+Date:   Wed Oct 30 00:32:09 2024 +0700
+
+    update link repor
+
+[33mcommit 7b66d7b6882ab1f2c230edbb9d22cf79fadbb4fd[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Tue Oct 29 15:15:39 2024 +0700
+
+    fixing the hashed file
+
+[33mcommit 852eb28509ce9375757cfbaef96c18f8fa91c030[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Tue Oct 29 14:56:44 2024 +0700
+
+    bruh
+
+[33mcommit 2e75e16badd4013318cdeb6a9f75eaf1e17570f2[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Tue Oct 29 00:03:53 2024 +0700
+
+     peer to peer dowload
+
+[33mcommit 54906896393d3f365ba5b7513a47f2cd2888c9b2[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Mon Oct 28 22:56:12 2024 +0700
+
+     Test
+
+[33mcommit 6212a81857f368bd7d144df2a221a5ca965e0072[m
+Merge: c4dc050 1444e01
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Mon Oct 28 22:53:04 2024 +0700
+
+    Merge branch 'main' with resolved conflicts
+
+[33mcommit c4dc05028ca0773ff8c6ef5f37dc17dbae685dcc[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Mon Oct 28 22:44:03 2024 +0700
+
+    Fix Node
+
+[33mcommit 1444e0162b1612f203920db26acfb8f58ff29461[m
+Author: KPoca <khangcan2004@gmail.com>
+Date:   Mon Oct 28 22:35:25 2024 +0700
+
+    Testing
+
+[33mcommit 0f2fc81b93d1c3cd461b3067e322c5d52b6bf19e[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Mon Oct 28 22:29:26 2024 +0700
+
+    Fix tracker
+
+[33mcommit 9ee4875bd396a62b7cba2aad22e25cd0d1a5267c[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Mon Oct 28 22:06:20 2024 +0700
+
+     Tracker-Peer-Node_Cli
+
+[33mcommit 5c33c15eb401e1eadf38359e795d937bb39548d8[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Oct 27 16:41:25 2024 +0700
+
+     Rewrite agian the README
+
+[33mcommit 1c09239944d38b0f48f2caba63dd3590030f84a7[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Oct 27 16:40:08 2024 +0700
+
+     Rewrite the README
+
+[33mcommit 6ba1bb7fc8f1c0f3e89503bf83ab74660c217b6e[m
+Author: Minhdev2004 <chinhtpc123@gmail.com>
+Date:   Sun Oct 27 16:31:53 2024 +0700
+
+    Add Diagram
+
+[33mcommit fc7083b933f1d119bb94eeb19b3bf28af2c1c3a6[m
+Author: diepvuminh123 <127382433+diepvuminh123@users.noreply.github.com>
+Date:   Sun Oct 27 16:21:08 2024 +0700
+
+    Initial commit
