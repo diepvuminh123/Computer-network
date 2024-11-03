@@ -4,13 +4,9 @@ from tkinter import messagebox
 from tkinter import scrolledtext 
 import os
 import threading
-import time
-import select
 import _thread
 import socket
 from functools import partial
-
-
 
 FILESIZE = 40960000
 WINDOWSIZESTRING = "450x560+500+200"
@@ -22,14 +18,10 @@ root.resizable(False,False)
 image_icon=PhotoImage(file="Image/app_icon.png")
 root.iconphoto(False,image_icon)
 
-
-
-
 Label(root, text="Server",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=30)
 Frame(root, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
 box=scrolledtext.ScrolledText(root,width=49,height=16)
 box.place(x=20, y=200)
-
 
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 4456
@@ -38,7 +30,7 @@ SIZE = 40960000
 FORMAT = "utf-8"
 SERVER_DATA_PATH = "server_data"
 
-
+server = None  # Khởi tạo server ở mức toàn cục
 connlist = []
 addrlist = []
 
@@ -59,10 +51,10 @@ def handle_client(conn, addr):
             print(message)
         elif cmd == "PUBLISH":
             filename = data[1]
-            if (filename==""):
+            if filename == "":
                 continue
             for c in connlist:
-                if (c[0]==conn):
+                if c[0] == conn:
                     c[1].append(filename)
         elif cmd == "DOWNLOAD":
             msg = data[1]
@@ -70,8 +62,7 @@ def handle_client(conn, addr):
             port = conn.getpeername()[1]
             filename = msg
             for c in connlist:
-                if (c[0]!=conn):
-               
+                if c[0] != conn:
                     send_msg = f"DOWNLOAD@{filename};{peer};{port}"
                     print(send_msg)
                     c[0].send(send_msg.encode(FORMAT))
@@ -85,7 +76,6 @@ def handle_client(conn, addr):
 def printList(list, show):
     for elem in list:
         show.insert(END, "Client:" , f"{elem[0]}:{elem[1]}")
-
 
 def is_valid_input(input):
     try:
@@ -108,43 +98,35 @@ def Ping(ip_var):
                     print("Address is valid")
                     messagebox.showinfo("ACTIVED", "This client is currently connected")
                     return
-            if (result==False):
+            if not result:
                 messagebox.showinfo("Warning", "Address is not valid")          
         else:
             messagebox.showerror("ERROR", "Syntax error")
-            
-            
 
 def ClientList():
-
-
     window=Toplevel(root)
     window.title("CLIENT STATUS")
     window.geometry(WINDOWSIZESTRING)
     window.configure(bg="#f4fdfe")
     window.resizable(False,False)
-    Label(window, text="The connected clients\' list",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=30)
+    Label(window, text="The connected clients' list",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe", fg="#003366").place(x=20,y=30)
     Frame(window, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
     show_clientList = Listbox(window,width=100,height=50)
     show_clientList.place(x = 0, y = 210)
-    
-
-
-    printList(addrlist,show_clientList)
+    printList(addrlist, show_clientList)
     
     dis_ip_var = StringVar()
     ping_ip_var = StringVar()
     
-    discover_label=Label(window,text="Enter IP:PORT to discover").place(x=210, y = 100)
-    discover_ip=Entry(window,textvariable=dis_ip_var, width=30, bd=4).place(x=210, y=120)
-    discover=Button(window,text="Discover",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", width=10, height=1, command=lambda: Discover(dis_ip_var))
-    discover.place(x=50,y=100)
+    discover_label = Label(window, text="Enter IP:PORT to discover").place(x=210, y=100)
+    discover_ip = Entry(window, textvariable=dis_ip_var, width=30, bd=4).place(x=210, y=120)
+    discover = Button(window, text="Discover", font=('Acumin Variable Concept',17,'bold'), bg="#f4fdfe", width=10, height=1, command=lambda: Discover(dis_ip_var))
+    discover.place(x=50, y=100)
     
-    ping_label=Label(window,text="Enter IP:PORT to ping").place(x=210, y = 150)
-    ping_ip=Entry(window,textvariable=ping_ip_var, width=30, bd=4).place(x=210, y=170)
-    ping=Button(window,text="Ping",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", width=10, height=1, command=lambda: Ping(ping_ip_var))
-    ping.place(x=50,y=150)
-    
+    ping_label = Label(window, text="Enter IP:PORT to ping").place(x=210, y=150)
+    ping_ip = Entry(window, textvariable=ping_ip_var, width=30, bd=4).place(x=210, y=170)
+    ping = Button(window, text="Ping", font=('Acumin Variable Concept',17,'bold'), bg="#f4fdfe", width=10, height=1, command=lambda: Ping(ping_ip_var))
+    ping.place(x=50, y=150)
     
     def Discover(ip_var):
         input = ip_var.get()
@@ -154,40 +136,35 @@ def ClientList():
             if is_valid_input(input):
                 ip, port = input.split(':')
                 result = False
-                # for addr in addrlist:
                 for c in connlist:
                     pe = c[0].getpeername()[0]
                     po = c[0].getpeername()[1]
                     if ip == pe and port == str(po):
                         result = True
-                        wd=Toplevel(window)
+                        wd = Toplevel(window)
                         wd.title("DISCOVER")
                         wd.geometry(WINDOWSIZESTRING)
                         wd.configure(bg="#f4fdfe")
-                        wd.resizable(False,False)
-                        Label(wd, text="List of sharing files",font = ('Acumin Variable Concept',20,'bold'),bg="#f4fdfe").place(x=20,y=30)
-                        show_fileList = Listbox(wd,width=100,height=50)
-                        show_fileList.place(x = 0, y = 100)
+                        wd.resizable(False, False)
+                        Label(wd, text="List of sharing files", font=('Acumin Variable Concept',20,'bold'), bg="#f4fdfe").place(x=20, y=30)
+                        show_fileList = Listbox(wd, width=100, height=50)
+                        show_fileList.place(x=0, y=100)
                         for f in c[1]:
                             show_fileList.insert(END, f)
                         wd.mainloop()
                         return
-                    # else:
-                if (result==False):
+                if not result:
                     messagebox.showinfo("Warning", "Address is not valid")
-                    print("Address is not valid")       
             else:
                 messagebox.showerror("ERROR", "Syntax error")
     window.mainloop()
 
-
 def Server():
-    res = f"[STARTING] Server is starting"
+    global server
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(ADDR)
     server.listen()
-    res = res + f"\n[LISTENING] Server is listening on {IP}:{PORT}.\n" + "Waiting for connection...\n"
-   
+    res = f"[STARTING] Server is starting\n[LISTENING] Server is listening on {IP}:{PORT}.\nWaiting for connection...\n"
     box.insert(INSERT, res)
 
     while True:
@@ -200,49 +177,40 @@ def Server():
 
 def ServerThread():
     _thread.start_new_thread(Server, ())
+    start_button.place_forget()
+    stop_button.place(x=50, y=100)
 
-def Stop():
-    exit()
-root.protocol("WM_DELETE_WINDOW", Stop)
-
+def StopServer():
+    global server
+    if server:
+        for conn, _ in connlist:
+            conn.close()  # Đóng tất cả các kết nối của client
+        server.close()  # Đóng server
+        server = None   # Đặt lại server về None để có thể khởi động lại
+        connlist.clear()  # Xóa danh sách client
+        addrlist.clear()
+        box.insert(INSERT, "[STOPPED] Server has stopped.\n")
+    stop_button.place_forget()
+    start_button.place(x=50, y=100)
 
 def startClientList():
     _thread.start_new_thread(ClientList, ())
 
-# start=Button(root,text="Start Server",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=ServerThread)
-# start.place(x=50,y=100)
-# clist=Button(root,text="Client List",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=startClientList)
-# clist.place(x=250,y=100)
-def on_enter(e):
-    con['background'] = '#0078D7'  # Màu nền khi hover
-    con['foreground'] = 'white'    # Màu chữ khi hover
+# Nút START SERVER
+start_button = Button(root, text="START SERVER", font=('Acumin Variable Concept', 17, 'bold'),
+                      bg="#f4fdfe", fg="#003366", activebackground="#005BB5", activeforeground="white", 
+                      command=ServerThread)
+start_button.place(x=50, y=100)
 
-def on_leave(e):
-    con['background'] = '#f4fdfe'  # Màu nền mặc định
-    con['foreground'] = '#003366'  # Màu chữ mặc định
+# Nút STOP SERVER (ẩn ban đầu)
+stop_button = Button(root, text="STOP SERVER", font=('Acumin Variable Concept', 17, 'bold'),
+                     bg="#f4fdfe", fg="#cc0000", activebackground="#B50000", activeforeground="white", 
+                     command=StopServer)
 
-start = Button(
-    root,
-    text="START SERVER",
-    font=('Acumin Variable Concept', 17, 'bold'),
-    bg="#f4fdfe",        # Màu nền ban đầu
-    fg="#003366",        # Màu chữ ban đầu
-    activebackground="#005BB5",  # Màu khi nhấn vào nút
-    activeforeground="white",    # Màu chữ khi nhấn vào nút
-    command=ServerThread
-)
-start.place(x=50,y=100)
+# Nút CLIENT LIST
+clist_button = Button(root, text="CLIENT LIST", font=('Acumin Variable Concept', 17, 'bold'),
+                      bg="#f4fdfe", fg="#003366", activebackground="#005BB5", activeforeground="white", 
+                      command=startClientList)
+clist_button.place(x=250, y=100)
 
-clist=Button(root,text="Client List",font=('Acumin Variable Concept',17,'bold') ,bg="#f4fdfe", command=startClientList)
-clist = Button(
-    root,
-    text="CLIENT LIST",
-    font=('Acumin Variable Concept', 17, 'bold'),
-    bg="#f4fdfe",        # Màu nền ban đầu
-    fg="#003366",        # Màu chữ ban đầu
-    activebackground="#005BB5",  # Màu khi nhấn vào nút
-    activeforeground="white",    # Màu chữ khi nhấn vào nút
-    command=startClientList
-)
-clist.place(x=250,y=100)
 root.mainloop()

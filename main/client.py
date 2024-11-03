@@ -8,7 +8,7 @@ import _thread
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x500+500+200"
+WINDOWSIZESTRING = "450x450+500+200"
 
 # Tạo file lưu tài khoản nếu chưa có
 if not os.path.exists("accounts.txt"):
@@ -47,19 +47,19 @@ def register():
     register_window = Toplevel(main_root)
     register_window.title("Register")
     register_window.geometry("300x250")
-    register_window.configure(bg="#f4fdfe")
+    register_window.configure(bg="#FFFFF0")
     register_window.resizable(False, False)
 
-    Label(register_window, text="Sign up", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
-    Label(register_window, text="Username", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+    Label(register_window, text="Sign up", font=("Segoe UI", 20, 'bold'), bg="#FFFFF0", fg="#800020").pack(pady=10)
+    Label(register_window, text="Username", font=("Segoe UI", 13), bg="#FFFFF0").pack()
     username_entry = Entry(register_window, width=20, bg="white", font=("arial", 15))
     username_entry.pack()
 
-    Label(register_window, text="Password", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+    Label(register_window, text="Password", font=("Segoe UI", 13), bg="#FFFFF0").pack()
     password_entry = Entry(register_window, width=20, bg="white", font=("arial", 15), show="*")
     password_entry.pack()
 
-    Button(register_window, text="Register", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366",
+    Button(register_window, text="Register", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
            command=register_user).pack(pady=20)
 
 def login():
@@ -80,9 +80,9 @@ def login():
 # Giao diện chính sau khi đăng nhập
 def main_window():
     root = Tk()
-    root.title("FILE TRANSFER CLIENT")
+    root.title("P2P FILE TRANSFER CLIENT")
     root.geometry(WINDOWSIZESTRING)
-    root.configure(bg="#f4fdfe")
+    root.configure(bg="#FFFFF0")
     root.resizable(False, False)
 
     image_icon = PhotoImage(file="Image/app_icon.png")
@@ -97,9 +97,9 @@ def main_window():
     uploaded_files = []
 
     # Thêm Listbox để hiển thị danh sách file đã upload
-    Label(root, text="Uploaded files list", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=240)
+    Label(root, text="Uploaded files", font=('Segoe UI', 13), bg="#FFFFF0").place(x=175, y=180)
     uploaded_listbox = Listbox(root, width=45, height=10, font=('arial', 12))
-    uploaded_listbox.place(x=20, y=275)
+    uploaded_listbox.place(x=20, y=215)
 
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -140,7 +140,7 @@ def main_window():
             if name:
                 uploaded_files.append((filedir, name))
                 client.send(f"UPLOAD@{name}".encode(FORMAT))
-                messagebox.showinfo("Upload", f"'{name}' has been uploaded.")
+                messagebox.showinfo("Uploaded", f"'{name}' has been uploaded successfully.")
                 uploaded_listbox.insert(END, name)  # Hiển thị tên file trong danh sách
 
     def Upload():
@@ -167,11 +167,11 @@ def main_window():
         download_window = Toplevel(root)
         download_window.title("Enter File Name to Download")
         download_window.geometry("300x150")
-        download_window.configure(bg="#f4fdfe")
+        download_window.configure(bg="#FFFFF0")
         download_window.resizable(False, False)
 
         # Label for the new window
-        Label(download_window, text="Enter file name:", font=('Acumin Variable Concept', 13), bg="#f4fdfe").pack(pady=10)
+        Label(download_window, text="Enter file name:", font=('Segoe UI', 13), bg="#FFFFF0").pack(pady=10)
         
         # Entry widget for file name input
         file_name_entry = Entry(download_window, width=20, fg="black", border=2, bg='white', font=('arial', 15))
@@ -185,11 +185,12 @@ def main_window():
                 client.send(send_msg.encode(FORMAT))
                 _thread.start_new_thread(partial(receive_thread, fn), ())
                 download_window.destroy()  # Close the download window after initiating the download
-
+                
+        
         # Button to start the download
-        Button(download_window, text="Download", font=("Acumin Variable Concept", 13, 'bold'), bg="#f4fdfe", fg="#003366",
+        Button(download_window, text="Download", font=("Segoe UI", 13, 'bold'), bg="#FFFFF0", fg="#800020",
             command=start_download).pack(pady=10)
-
+        
 
     def Connect():
         SERVERIP = ipInp.get()
@@ -200,23 +201,23 @@ def main_window():
         
 
 
-    Label(root, text="CLIENT", font=('Acumin Variable Concept', 20, 'bold'), bg="#f4fdfe", fg="#003366").place(x=20, y=20)
-    Label(root, text="Server's IP address", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=70)
+    # Label(root, text="CLIENT", font=('Segoe UI', 20, 'bold'), bg="#FFFFF0", fg="#800020").place(x=450/2 - 50, y=20)
+    Label(root, text="Server's IP address", font=('Segoe UI', 13), bg="#FFFFF0").place(x=75, y=20)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
-    ipInp.place(x=20, y=100)
-    # Label(root, text="File name", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=220)
+    ipInp.place(x=40, y=50)
+    # Label(root, text="File name", font=('Segoe UI', 13), bg="#FFFFF0").place(x=20, y=220)
 
-    con = Button(root, text="CONNECT", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
+    con = Button(root, text="CONNECT", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
                  activebackground="#005BB5", activeforeground="white", command=Connect)
-    con.place(x=260, y=100)
+    con.place(x=285, y=45)
 
-    send = Button(root, text="UPLOAD", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
+    send = Button(root, text="UPLOAD", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
                   activebackground="#005BB5", activeforeground="white", command=Upload)
-    send.place(x=60, y=160)
+    send.place(x=60, y=120)
 
-    receive = Button(root, text="DOWNLOAD", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
+    receive = Button(root, text="DOWNLOAD", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
                      activebackground="#005BB5", activeforeground="white", command=Download)
-    receive.place(x=260, y=160)
+    receive.place(x=260, y=120)
 
     def handle_server():
         while True:
@@ -240,20 +241,20 @@ def main_window():
 # Cửa sổ đăng nhập
 main_root = Tk()
 main_root.title("Login")
-main_root.geometry("300x280")
-main_root.configure(bg="#f4fdfe")
+main_root.geometry("320x320")
+main_root.configure(bg="#FFFFF0")
 main_root.resizable(False, False)
 
-Label(main_root, text="Login", font=("Acumin Variable Concept", 20, 'bold'), bg="#f4fdfe", fg="#003366").pack(pady=10)
-Label(main_root, text="Username", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+Label(main_root, text="Login", font=("Segoe UI", 20, 'bold'), bg="#FFFFF0", fg="#800020").pack(pady=10)
+Label(main_root, text="Username", font=("Segoe UI", 13), bg="#FFFFF0").pack()
 username_entry = Entry(main_root, width=20, bg="white", font=("arial", 15))
 username_entry.pack()
 
-Label(main_root, text="Password", font=("Acumin Variable Concept", 13), bg="#f4fdfe").pack()
+Label(main_root, text="Password", font=("Segoe UI", 13), bg="#FFFFF0").pack()
 password_entry = Entry(main_root, width=20, bg="white", font=("arial", 15), show="*")
 password_entry.pack()
 
-Button(main_root, text="Log in", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=login).pack(pady=10)
-Button(main_root, text="Sign up", font=("Acumin Variable Concept", 15, 'bold'), bg="#f4fdfe", fg="#003366", command=register).pack(pady=10)
+Button(main_root, text="Log in", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020", command=login).pack(pady=10)
+Button(main_root, text="Sign up", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020", command=register).pack(pady=10)
 
 main_root.mainloop()
