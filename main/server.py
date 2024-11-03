@@ -49,7 +49,7 @@ def handle_client(conn, addr):
             message = f"[MESSAGE] {conn.getpeername()} {data[1]}"
             box.insert(INSERT, message)
             print(message)
-        elif cmd == "PUBLISH":
+        elif cmd == "UPLOAD":
             filename = data[1]
             if filename == "":
                 continue

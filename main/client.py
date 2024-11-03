@@ -10,17 +10,17 @@ from functools import partial
 FILESIZE = 40960000
 WINDOWSIZESTRING = "450x200+500+200"
 
-# Tạo file lưu tài khoản nếu chưa có
+# Tạo file lưu info các tài khoảng
 if not os.path.exists("accounts.txt"):
     open("accounts.txt", "w").close()
 
-# Hàm mở giao diện chính sau khi đăng nhập thành công
+# Mở giao diện chính sau khi đăng nhập thành công
 def open_main_window():
-    main_root.destroy()  # Đóng cửa sổ đăng nhập
-    main_window()  # Mở cửa sổ chính
+    main_root.destroy() 
+    main_window()
 
 def register():
-    # Hàm đăng ký
+    # Đăng ký
     def register_user():
         username_info = username_entry.get()
         password_info = password_entry.get()
@@ -61,9 +61,9 @@ def register():
 
     Button(register_window, text="Register", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
            command=register_user).pack(pady=20)
-
+    
+# Xử lý đăng nhập
 def login():
-    # Hàm xử lý đăng nhập
     username_info = username_entry.get()
     password_info = password_entry.get()
 
@@ -72,7 +72,7 @@ def login():
         for account in list:
             stored_username, stored_password = account.strip().split(":")
             if stored_username == username_info and stored_password == password_info:
-                open_main_window()  # Mở cửa sổ chính
+                open_main_window()
                 return
 
     messagebox.showerror("Error", "Username or password is incorrect.")
@@ -153,39 +153,28 @@ def main_window():
                 ans = item
         return ans
 
-    #incoming_file = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
-    #incoming_file.place(x=20, y=250)
-
     def Download():
-        # Create a new Toplevel window for file name input
         download_window = Toplevel(root)
         download_window.title("Enter File Name to Download")
         download_window.geometry("300x150")
         download_window.configure(bg="#FFFFF0")
         download_window.resizable(False, False)
 
-        # Label for the new window
         Label(download_window, text="Enter file name:", font=('Segoe UI', 13), bg="#FFFFF0").pack(pady=10)
-        
-        # Entry widget for file name input
         file_name_entry = Entry(download_window, width=20, fg="black", border=2, bg='white', font=('arial', 15))
         file_name_entry.pack(pady=5)
 
-        # Function to handle the download after entering the file name
         def start_download():
             fn = file_name_entry.get()
             if fn:
                 send_msg = f"DOWNLOAD@{fn}"
                 client.send(send_msg.encode(FORMAT))
                 _thread.start_new_thread(partial(receive_thread, fn), ())
-                download_window.destroy()  # Close the download window after initiating the download
+                download_window.destroy()  
                 
-        
-        # Button to start the download
         Button(download_window, text="Download", font=("Segoe UI", 13, 'bold'), bg="#FFFFF0", fg="#800020",
             command=start_download).pack(pady=10)
         
-
     def Connect():
         SERVERIP = ipInp.get()
         ADDRESS = (SERVERIP, PORT)
@@ -193,13 +182,9 @@ def main_window():
         messagebox.showinfo("Succeeded", "Connected to the server successfully.")
         _thread.start_new_thread(handle_server, ())
         
-
-
-    # Label(root, text="CLIENT", font=('Segoe UI', 20, 'bold'), bg="#FFFFF0", fg="#800020").place(x=450/2 - 50, y=20)
     Label(root, text="Server's IP address", font=('Segoe UI', 13), bg="#FFFFF0").place(x=75, y=20)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=40, y=50)
-    # Label(root, text="File name", font=('Segoe UI', 13), bg="#FFFFF0").place(x=20, y=220)
 
     con = Button(root, text="CONNECT", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
                  activebackground="#005BB5", activeforeground="white", command=Connect)
