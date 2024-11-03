@@ -8,7 +8,7 @@ import _thread
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x450+500+200"
+WINDOWSIZESTRING = "450x200+500+200"
 
 # Tạo file lưu tài khoản nếu chưa có
 if not os.path.exists("accounts.txt"):
@@ -96,11 +96,6 @@ def main_window():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     uploaded_files = []
 
-    # Thêm Listbox để hiển thị danh sách file đã upload
-    Label(root, text="Uploaded files", font=('Segoe UI', 13), bg="#FFFFF0").place(x=175, y=180)
-    uploaded_listbox = Listbox(root, width=45, height=10, font=('arial', 12))
-    uploaded_listbox.place(x=20, y=215)
-
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -141,7 +136,6 @@ def main_window():
                 uploaded_files.append((filedir, name))
                 client.send(f"UPLOAD@{name}".encode(FORMAT))
                 messagebox.showinfo("Uploaded", f"'{name}' has been uploaded successfully.")
-                uploaded_listbox.insert(END, name)  # Hiển thị tên file trong danh sách
 
     def Upload():
         select_file()
