@@ -8,7 +8,7 @@ import _thread
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x450+500+200"
+WINDOWSIZESTRING = "450x500+500+200"
 
 # Tạo file lưu tài khoản nếu chưa có
 if not os.path.exists("accounts.txt"):
@@ -94,12 +94,12 @@ def main_window():
     SIZE = 40960000
     FORMAT = "utf-8"
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    published_files = []
+    uploaded_files = []
 
     # Thêm Listbox để hiển thị danh sách file đã upload
-    Label(root, text="Uploaded files list", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=300)
-    published_listbox = Listbox(root, width=40, height=10, font=('arial', 12))
-    published_listbox.place(x=20, y=330)
+    Label(root, text="Uploaded files list", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=240)
+    uploaded_listbox = Listbox(root, width=45, height=10, font=('arial', 12))
+    uploaded_listbox.place(x=20, y=275)
 
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -138,60 +138,85 @@ def main_window():
         if filedir:
             name = os.path.basename(filedir)
             if name:
-                published_files.append((filedir, name))
-                client.send(f"PUBLISH@{name}".encode(FORMAT))
-                messagebox.showinfo("Publish", f"'{name}' has been uploaded.")
-                published_listbox.insert(END, name)  # Hiển thị tên file trong danh sách
+                uploaded_files.append((filedir, name))
+                client.send(f"UPLOAD@{name}".encode(FORMAT))
+                messagebox.showinfo("Upload", f"'{name}' has been uploaded.")
+                uploaded_listbox.insert(END, name)  # Hiển thị tên file trong danh sách
 
-    def Publish():
+    def Upload():
         select_file()
 
     def FindFile(filename):
-        for item in published_files:
+        for item in uploaded_files:
             if item[1] == filename:
                 return True
         return False
 
     def GetFile(filename):
         ans = ("", "")
-        for item in published_files:
+        for item in uploaded_files:
             if item[1] == filename:
                 ans = item
         return ans
 
-    incoming_file = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
-    incoming_file.place(x=20, y=250)
+    #incoming_file = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
+    #incoming_file.place(x=20, y=250)
 
     def Download():
-        send_msg = "DOWNLOAD@"
-        fn = incoming_file.get()
-        send_msg += fn
-        client.send(send_msg.encode(FORMAT))
-        _thread.start_new_thread(partial(receive_thread, fn), ())
+        # Create a new Toplevel window for file name input
+        download_window = Toplevel(root)
+        download_window.title("Enter File Name to Download")
+        download_window.geometry("300x150")
+        download_window.configure(bg="#f4fdfe")
+        download_window.resizable(False, False)
+
+        # Label for the new window
+        Label(download_window, text="Enter file name:", font=('Acumin Variable Concept', 13), bg="#f4fdfe").pack(pady=10)
+        
+        # Entry widget for file name input
+        file_name_entry = Entry(download_window, width=20, fg="black", border=2, bg='white', font=('arial', 15))
+        file_name_entry.pack(pady=5)
+
+        # Function to handle the download after entering the file name
+        def start_download():
+            fn = file_name_entry.get()
+            if fn:
+                send_msg = f"DOWNLOAD@{fn}"
+                client.send(send_msg.encode(FORMAT))
+                _thread.start_new_thread(partial(receive_thread, fn), ())
+                download_window.destroy()  # Close the download window after initiating the download
+
+        # Button to start the download
+        Button(download_window, text="Download", font=("Acumin Variable Concept", 13, 'bold'), bg="#f4fdfe", fg="#003366",
+            command=start_download).pack(pady=10)
+
 
     def Connect():
         SERVERIP = ipInp.get()
         ADDRESS = (SERVERIP, PORT)
         client.connect(ADDRESS)
+        messagebox.showinfo("Succeeded", "Connected to the server successfully.")
         _thread.start_new_thread(handle_server, ())
+        
+
 
     Label(root, text="CLIENT", font=('Acumin Variable Concept', 20, 'bold'), bg="#f4fdfe", fg="#003366").place(x=20, y=20)
     Label(root, text="Server's IP address", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=70)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=20, y=100)
-    Label(root, text="File name", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=220)
+    # Label(root, text="File name", font=('Acumin Variable Concept', 13), bg="#f4fdfe").place(x=20, y=220)
 
     con = Button(root, text="CONNECT", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
                  activebackground="#005BB5", activeforeground="white", command=Connect)
     con.place(x=260, y=100)
 
-    send = Button(root, text="PUBLISH", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
-                  activebackground="#005BB5", activeforeground="white", command=Publish)
-    send.place(x=160, y=160)
+    send = Button(root, text="UPLOAD", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
+                  activebackground="#005BB5", activeforeground="white", command=Upload)
+    send.place(x=60, y=160)
 
     receive = Button(root, text="DOWNLOAD", font=('Acumin Variable Concept', 15, 'bold'), bg="#f4fdfe", fg="#003366",
                      activebackground="#005BB5", activeforeground="white", command=Download)
-    receive.place(x=260, y=250)
+    receive.place(x=260, y=160)
 
     def handle_server():
         while True:
