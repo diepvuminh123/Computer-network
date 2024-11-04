@@ -110,6 +110,7 @@ def main_window():
                 l = friend.recv(SIZE)
             f.close()
             friend.close()
+            messagebox.showinfo("Download", "File has been downloaded successfully.")
             break
         host_client.close()
 
@@ -135,7 +136,7 @@ def main_window():
             if name:
                 uploaded_files.append((filedir, name))
                 client.send(f"UPLOAD@{name}".encode(FORMAT))
-                messagebox.showinfo("Uploaded", f"'{name}' has been uploaded successfully.")
+                messagebox.showinfo("Uploaded", "File has been uploaded successfully.")
 
     def Upload():
         select_file()

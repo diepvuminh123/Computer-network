@@ -9,7 +9,7 @@ import socket
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x560+500+200"
+WINDOWSIZESTRING = "450x470+500+200"
 root = Tk()
 root.title("FILE TRANSFER SERVER")
 root.geometry(WINDOWSIZESTRING)
@@ -18,10 +18,10 @@ root.resizable(False,False)
 image_icon=PhotoImage(file="Image/app_icon.png")
 root.iconphoto(False,image_icon)
 
-Label(root, text="Server",font = ('Acumin Variable Concept',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
+# Label(root, text="Server",font = ('Segoe UI',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
 Frame(root, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
-box=scrolledtext.ScrolledText(root,width=49,height=16)
-box.place(x=20, y=200)
+box=scrolledtext.ScrolledText(root,width=56, height=26)
+box.place(x=20, y=110)
 
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 4456
@@ -109,24 +109,26 @@ def ClientList():
     window.geometry(WINDOWSIZESTRING)
     window.configure(bg="#FFFFF0")
     window.resizable(False,False)
-    Label(window, text="The connected clients' list",font = ('Acumin Variable Concept',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
+    # Label(window, text="The connected clients' list",font = ('Segoe UI',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
     Frame(window, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
-    show_clientList = Listbox(window,width=100,height=50)
-    show_clientList.place(x = 0, y = 210)
+    show_clientList = Listbox(window,width=68,height=18)
+    show_clientList.place(x = 20, y = 170)
     printList(addrlist, show_clientList)
     
     dis_ip_var = StringVar()
     ping_ip_var = StringVar()
     
-    discover_label = Label(window, text="Enter IP:PORT to discover").place(x=210, y=100)
-    discover_ip = Entry(window, textvariable=dis_ip_var, width=30, bd=4).place(x=210, y=120)
-    discover = Button(window, text="Discover", font=('Acumin Variable Concept',17,'bold'), bg="#FFFFF0", width=10, height=1, command=lambda: Discover(dis_ip_var))
-    discover.place(x=50, y=100)
+    # ping_label = Label(window, text="Enter IP:PORT to ping").place(x=210, y=150)
+    ping_ip = Entry(window, textvariable=ping_ip_var, width=15, bd=4, font=('Arial', 14) ).place(x=240, y=31)
+    ping = Button(window, text="PING", font=('Segoe UI',17,'bold'), fg="#800020", bg="#FFFFF0", width=10, height=1, command=lambda: Ping(ping_ip_var))
+    ping.place(x=50, y=20)
     
-    ping_label = Label(window, text="Enter IP:PORT to ping").place(x=210, y=150)
-    ping_ip = Entry(window, textvariable=ping_ip_var, width=30, bd=4).place(x=210, y=170)
-    ping = Button(window, text="Ping", font=('Acumin Variable Concept',17,'bold'), bg="#FFFFF0", width=10, height=1, command=lambda: Ping(ping_ip_var))
-    ping.place(x=50, y=150)
+    # discover_label = Label(window, text="Enter IP:PORT to discover").place(x=210, y=100)
+    discover_ip = Entry(window, textvariable=dis_ip_var, width=15, bd=4, font=('Arial', 14)).place(x=240, y=102)
+    discover = Button(window, text="DISPLAY", font=('Segoe UI',17,'bold'), fg="#800020", bg="#FFFFF0", width=10, height=1, command=lambda: Discover(dis_ip_var))
+    discover.place(x=50, y=90)
+    
+    
     
     def Discover(ip_var):
         input = ip_var.get()
@@ -143,12 +145,12 @@ def ClientList():
                         result = True
                         wd = Toplevel(window)
                         wd.title("DISCOVER")
-                        wd.geometry(WINDOWSIZESTRING)
+                        wd.geometry("450x410+500+200")
                         wd.configure(bg="#FFFFF0")
                         wd.resizable(False, False)
-                        Label(wd, text="List of sharing files", font=('Acumin Variable Concept',20,'bold'), bg="#FFFFF0").place(x=20, y=30)
-                        show_fileList = Listbox(wd, width=100, height=50)
-                        show_fileList.place(x=0, y=100)
+                        Label(wd, text="Shared files", font=('Segoe UI',20,'bold'), fg="#800020", bg="#FFFFF0").place(x=155, y=30)
+                        show_fileList = Listbox(wd, width=68, height=18)
+                        show_fileList.place(x=20, y=100)
                         for f in c[1]:
                             show_fileList.insert(END, f)
                         wd.mainloop()
@@ -178,7 +180,7 @@ def Server():
 def ServerThread():
     _thread.start_new_thread(Server, ())
     start_button.place_forget()
-    stop_button.place(x=50, y=100)
+    stop_button.place(x=45, y=20)
 
 def StopServer():
     global server
@@ -191,26 +193,26 @@ def StopServer():
         addrlist.clear()
         box.insert(INSERT, "[STOPPED] Server has stopped.\n")
     stop_button.place_forget()
-    start_button.place(x=50, y=100)
+    start_button.place(x=40, y=20)
 
 def startClientList():
     _thread.start_new_thread(ClientList, ())
 
 # Nút START SERVER
-start_button = Button(root, text="START SERVER", font=('Acumin Variable Concept', 17, 'bold'),
+start_button = Button(root, text="START SERVER", font=('Segoe UI', 17, 'bold'),
                       bg="#FFFFF0", fg="#800020", activebackground="#005BB5", activeforeground="white", 
                       command=ServerThread)
-start_button.place(x=50, y=100)
+start_button.place(x=40, y=20)
 
 # Nút STOP SERVER (ẩn ban đầu)
-stop_button = Button(root, text="STOP SERVER", font=('Acumin Variable Concept', 17, 'bold'),
+stop_button = Button(root, text="STOP SERVER", font=('Segoe UI', 17, 'bold'),
                      bg="#FFFFF0", fg="#cc0000", activebackground="#B50000", activeforeground="white", 
                      command=StopServer)
 
 # Nút CLIENT LIST
-clist_button = Button(root, text="CLIENT LIST", font=('Acumin Variable Concept', 17, 'bold'),
+clist_button = Button(root, text="CLIENT LIST", font=('Segoe UI', 17, 'bold'),
                       bg="#FFFFF0", fg="#800020", activebackground="#005BB5", activeforeground="white", 
                       command=startClientList)
-clist_button.place(x=250, y=100)
+clist_button.place(x=260, y=20)
 
 root.mainloop()
