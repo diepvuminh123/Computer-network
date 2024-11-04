@@ -8,7 +8,7 @@ import _thread
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x200+500+200"
+WINDOWSIZESTRING = "450x270+500+200"
 
 # Tạo file lưu info các tài khoản
 if not os.path.exists("accounts.txt"):
@@ -220,7 +220,7 @@ def main_window():
 
     logout_btn = Button(root, text="LOGOUT", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
                         activebackground="#005BB5", activeforeground="white", command=disconnect)
-    logout_btn.place(x=180, y=160)
+    logout_btn.place(x=180, y=195)
 
     def handle_server():
         while True:
