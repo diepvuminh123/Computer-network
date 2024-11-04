@@ -201,6 +201,7 @@ def main_window():
         root.destroy()  # This will close the client window forcefully
 
 
+
     Label(root, text="Server's IP address", font=('Segoe UI', 13), bg="#FFFFF0").place(x=75, y=20)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=40, y=50)
