@@ -67,24 +67,15 @@ def handle_client(conn, addr):
                     print(send_msg)
                     c[0].send(send_msg.encode(FORMAT))
         elif cmd == "LOGOUT":
-            connlist.remove((conn, []))
+            connlist.remove(conn)
             addrlist.remove(addr)
-            refresh_client_list()  # Làm mới danh sách client sau khi logout
-            conn.close()
-            break 
+            break
     print(f"[DISCONNECTED] {addr} disconnected")
     conn.close()
 
-def refresh_client_list():
-    """Hàm làm mới danh sách client hiển thị trên box."""
-    box.delete('1.0', END)  # Xóa nội dung hiện tại
-    box.insert(INSERT, "[CLIENT LIST]\n")
-    for addr in addrlist:
-        box.insert(END, f"Client: {addr}\n")
-
 def printList(list, show):
     for elem in list:
-        show.insert(END, "Client:", f"{elem[0]}:{elem[1]}")
+        show.insert(END, "Client:" , f"{elem[0]}:{elem[1]}")
 
 def is_valid_input(input):
     try:

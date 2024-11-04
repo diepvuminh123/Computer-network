@@ -77,6 +77,10 @@ def login():
 
     messagebox.showerror("Error", "Username or password is incorrect.")
 
+
+
+
+
 # Giao diện chính sau khi đăng nhập
 def main_window():
     root = Tk()
@@ -96,6 +100,14 @@ def main_window():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     uploaded_files = []
 
+    def disconnect_from_tracker():
+        try:
+            client.send("LOGOUT@".encode(FORMAT))
+            client.close()
+        except Exception as e:
+            print("Error disconnecting:", e)
+
+
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -110,6 +122,7 @@ def main_window():
                 l = friend.recv(SIZE)
             f.close()
             friend.close()
+            messagebox.showinfo("Download", "File has been downloaded successfully.")
             break
         host_client.close()
 
@@ -135,7 +148,7 @@ def main_window():
             if name:
                 uploaded_files.append((filedir, name))
                 client.send(f"UPLOAD@{name}".encode(FORMAT))
-                messagebox.showinfo("Uploaded", f"'{name}' has been uploaded successfully.")
+                messagebox.showinfo("Uploaded", "File has been uploaded successfully.")
 
     def Upload():
         select_file()
@@ -224,7 +237,7 @@ def main_window():
                     get = GetFile(file)
                     _thread.start_new_thread(partial(share_thread, peer, port, get), ())
 
-    root.protocol("WM_DELETE_WINDOW", disconnect)  # Graceful shutdown on window close
+    root.protocol("WM_DELETE_WINDOW", root.quit)
     root.mainloop()
 
 # Cửa sổ đăng nhập
