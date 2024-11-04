@@ -10,7 +10,7 @@ from functools import partial
 FILESIZE = 40960000
 WINDOWSIZESTRING = "450x200+500+200"
 
-# Tạo file lưu info các tài khoảng
+# Tạo file lưu info các tài khoản
 if not os.path.exists("accounts.txt"):
     open("accounts.txt", "w").close()
 
@@ -182,6 +182,12 @@ def main_window():
         messagebox.showinfo("Succeeded", "Connected to the server successfully.")
         _thread.start_new_thread(handle_server, ())
         
+    def disconnect():
+        client.send("LOGOUT@".encode(FORMAT))
+        client.close()
+        root.destroy()  # This will close the client window forcefully
+
+
     Label(root, text="Server's IP address", font=('Segoe UI', 13), bg="#FFFFF0").place(x=75, y=20)
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=40, y=50)
@@ -197,6 +203,10 @@ def main_window():
     receive = Button(root, text="DOWNLOAD", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
                      activebackground="#005BB5", activeforeground="white", command=Download)
     receive.place(x=260, y=120)
+
+    logout_btn = Button(root, text="LOGOUT", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
+                        activebackground="#005BB5", activeforeground="white", command=disconnect)
+    logout_btn.place(x=180, y=160)
 
     def handle_server():
         while True:
@@ -214,7 +224,7 @@ def main_window():
                     get = GetFile(file)
                     _thread.start_new_thread(partial(share_thread, peer, port, get), ())
 
-    root.protocol("WM_DELETE_WINDOW", root.quit)
+    root.protocol("WM_DELETE_WINDOW", disconnect)  # Graceful shutdown on window close
     root.mainloop()
 
 # Cửa sổ đăng nhập
