@@ -77,11 +77,6 @@ def login():
 
     messagebox.showerror("Error", "Username or password is incorrect.")
 
-
-
-
-
-# Giao diện chính sau khi đăng nhập
 def main_window():
     root = Tk()
     root.title("P2P FILE TRANSFER CLIENT")

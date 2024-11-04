@@ -9,7 +9,7 @@ import socket
 from functools import partial
 
 FILESIZE = 40960000
-WINDOWSIZESTRING = "450x470+500+200"
+WINDOWSIZESTRING = "450x530+500+200"
 root = Tk()
 root.title("FILE TRANSFER TRACKER")
 root.geometry(WINDOWSIZESTRING)
@@ -21,7 +21,7 @@ root.iconphoto(False,image_icon)
 # Label(root, text="Server",font = ('Segoe UI',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
 Frame(root, width=400,height=2,bg="#f3f5f6").place(x=20,y=200)
 box=scrolledtext.ScrolledText(root,width=56, height=26)
-box.place(x=20, y=110)
+box.place(x=20, y=170)
 
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 4456
@@ -126,7 +126,7 @@ def Ping(ip_var):
 def ClientList():
     window=Toplevel(root)
     window.title("CLIENT STATUS")
-    window.geometry(WINDOWSIZESTRING)
+    window.geometry("450x480+500+200")
     window.configure(bg="#FFFFF0")
     window.resizable(False,False)
     # Label(window, text="The connected clients' list",font = ('Segoe UI',20,'bold'),bg="#FFFFF0", fg="#800020").place(x=20,y=30)
@@ -145,7 +145,7 @@ def ClientList():
 
     # discover_label = Label(window, text="Enter IP:PORT to discover").place(x=210, y=100)
     discover_ip = Entry(window, textvariable=dis_ip_var, width=15, bd=4, font=('Arial', 14)).place(x=240, y=102)
-    discover = Button(window, text="Discover", font=('Segoe UI',17,'bold'), fg="#800020", bg="#FFFFF0", width=10, height=1, command=lambda: Discover(dis_ip_var))
+    discover = Button(window, text="Detail", font=('Segoe UI',17,'bold'), fg="#800020", bg="#FFFFF0", width=10, height=1, command=lambda: Discover(dis_ip_var))
     discover.place(x=50, y=90)
     
     def Discover(ip_var):
@@ -198,7 +198,7 @@ def Server():
 def ServerThread():
     _thread.start_new_thread(Server, ())
     start_button.place_forget()
-    stop_button.place(x=45, y=20)
+    stop_button.place(x=155, y=20)
 
 def StopServer():
     global server
@@ -211,7 +211,7 @@ def StopServer():
         addrlist.clear()
         box.insert(INSERT, "[STOPPED] Server has stopped.\n")
     stop_button.place_forget()
-    start_button.place(x=40, y=20)
+    start_button.place(x=140, y=20)
 
 def startClientList():
     _thread.start_new_thread(ClientList, ())
@@ -220,7 +220,7 @@ def startClientList():
 start_button = Button(root, text="START SERVER", font=('Segoe UI', 17, 'bold'),
                       bg="#FFFFF0", fg="#800020", activebackground="#005BB5", activeforeground="white", 
                       command=ServerThread)
-start_button.place(x=40, y=20)
+start_button.place(x=140, y=20)
 
 # Nút STOP SERVER (ẩn ban đầu)
 stop_button = Button(root, text="STOP SERVER", font=('Segoe UI', 17, 'bold'),
@@ -231,6 +231,6 @@ stop_button = Button(root, text="STOP SERVER", font=('Segoe UI', 17, 'bold'),
 clist_button = Button(root, text="CLIENT LIST", font=('Segoe UI', 17, 'bold'),
                       bg="#FFFFF0", fg="#800020", activebackground="#005BB5", activeforeground="white", 
                       command=startClientList)
-clist_button.place(x=260, y=20)
+clist_button.place(x=155, y=90)
 
 root.mainloop()
