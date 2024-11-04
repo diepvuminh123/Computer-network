@@ -77,6 +77,10 @@ def login():
 
     messagebox.showerror("Error", "Username or password is incorrect.")
 
+
+
+
+
 # Giao diện chính sau khi đăng nhập
 def main_window():
     root = Tk()
@@ -95,6 +99,14 @@ def main_window():
     FORMAT = "utf-8"
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     uploaded_files = []
+
+    def disconnect_from_tracker():
+        try:
+            client.send("LOGOUT@".encode(FORMAT))
+            client.close()
+        except Exception as e:
+            print("Error disconnecting:", e)
+
 
     def receive_thread(filename):
         host_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -215,7 +227,7 @@ def main_window():
                     get = GetFile(file)
                     _thread.start_new_thread(partial(share_thread, peer, port, get), ())
 
-    root.protocol("WM_DELETE_WINDOW", root.quit)
+    root.protocol("WM_DELETE_WINDOW", lambda: [disconnect_from_tracker(), root.quit()])
     root.mainloop()
 
 # Cửa sổ đăng nhập
