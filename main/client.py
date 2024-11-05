@@ -50,7 +50,7 @@ def register():
     register_window.configure(bg="#FFFFF0")
     register_window.resizable(False, False)
 
-    Label(register_window, text="Sign up", font=("Segoe UI", 20, 'bold'), bg="#FFFFF0", fg="#800020").pack(pady=10)
+    Label(register_window, text="Sign up", font=("Segoe UI", 20), bg="#FFFFF0", fg="#800020").pack(pady=10)
     Label(register_window, text="Username", font=("Segoe UI", 13), bg="#FFFFF0").pack()
     username_entry = Entry(register_window, width=20, bg="white", font=("arial", 15))
     username_entry.pack()
@@ -59,7 +59,7 @@ def register():
     password_entry = Entry(register_window, width=20, bg="white", font=("arial", 15), show="*")
     password_entry.pack()
 
-    Button(register_window, text="Register", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
+    Button(register_window, text="Register", font=("Segoe UI", 15), bg="#FFFFF0", fg="#800020",
            command=register_user).pack(pady=20)
     
 # Xử lý đăng nhập
@@ -180,7 +180,7 @@ def main_window():
                 _thread.start_new_thread(partial(receive_thread, fn), ())
                 download_window.destroy()  
                 
-        Button(download_window, text="Download", font=("Segoe UI", 13, 'bold'), bg="#FFFFF0", fg="#800020",
+        Button(download_window, text="Download", font=("Segoe UI", 13), bg="#FFFFF0", fg="#800020",
             command=start_download).pack(pady=10)
         
     def Connect():
@@ -201,19 +201,19 @@ def main_window():
     ipInp = Entry(root, width=14, fg="black", border=2, bg='white', font=('arial', 20))
     ipInp.place(x=40, y=50)
 
-    con = Button(root, text="CONNECT", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
+    con = Button(root, text="CONNECT", font=('Segoe UI', 15), bg="#FFFFF0", fg="#800020",
                  activebackground="#005BB5", activeforeground="white", command=Connect)
     con.place(x=285, y=45)
 
-    send = Button(root, text="UPLOAD", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
+    send = Button(root, text="UPLOAD", font=('Segoe UI', 15), bg="#FFFFF0", fg="#800020",
                   activebackground="#005BB5", activeforeground="white", command=Upload)
     send.place(x=60, y=120)
 
-    receive = Button(root, text="DOWNLOAD", font=('Segoe UI', 15, 'bold'), bg="#FFFFF0", fg="#800020",
+    receive = Button(root, text="DOWNLOAD", font=('Segoe UI', 15), bg="#FFFFF0", fg="#800020",
                      activebackground="#005BB5", activeforeground="white", command=Download)
     receive.place(x=260, y=120)
 
-    logout_btn = Button(root, text="LOGOUT", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020",
+    logout_btn = Button(root, text="LOGOUT", font=("Segoe UI", 15), bg="#FFFFF0", fg="#800020",
                         activebackground="#005BB5", activeforeground="white", command=disconnect)
     logout_btn.place(x=180, y=195)
 
@@ -243,7 +243,7 @@ main_root.geometry("320x320")
 main_root.configure(bg="#FFFFF0")
 main_root.resizable(False, False)
 
-Label(main_root, text="Login", font=("Segoe UI", 20, 'bold'), bg="#FFFFF0", fg="#800020").pack(pady=10)
+Label(main_root, text="Login", font=("Segoe UI", 20), bg="#FFFFF0", fg="#800020").pack(pady=10)
 Label(main_root, text="Username", font=("Segoe UI", 13), bg="#FFFFF0").pack()
 username_entry = Entry(main_root, width=20, bg="white", font=("arial", 15))
 username_entry.pack()
@@ -252,7 +252,7 @@ Label(main_root, text="Password", font=("Segoe UI", 13), bg="#FFFFF0").pack()
 password_entry = Entry(main_root, width=20, bg="white", font=("arial", 15), show="*")
 password_entry.pack()
 
-Button(main_root, text="Log in", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020", command=login).pack(pady=10)
-Button(main_root, text="Sign up", font=("Segoe UI", 15, 'bold'), bg="#FFFFF0", fg="#800020", command=register).pack(pady=10)
+Button(main_root, text="Log in", font=("Segoe UI", 15), bg="#FFFFF0", fg="#800020", command=login).pack(pady=10)
+Button(main_root, text="Sign up", font=("Segoe UI", 15), bg="#FFFFF0", fg="#800020", command=register).pack(pady=10)
 
 main_root.mainloop()
